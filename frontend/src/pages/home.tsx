@@ -5,10 +5,11 @@ export const Home = () => {
   const [notes, setNotes] = useState([]);
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
+
   useEffect(() => {
-    getNote();
+    getNotes();
   }, []);
-  const getNote = () => {
+  const getNotes = () => {
     api
       .get("/api/notes/")
       .then((res) => res.data)
@@ -28,10 +29,13 @@ export const Home = () => {
         }
       })
       .catch((error) => console.log(error));
+    window.location.reload();
   };
   const createNote = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     api.post("/api/notes/", { content, title }).then((res) => {
+      setContent("");
+      setTitle("");
       if (res.status === 201) alert("Note created");
       else alert("Failed to create Note");
     });
@@ -41,6 +45,7 @@ export const Home = () => {
       <div>
         <h2>Notes</h2>
       </div>
+      <h2>Create Notes</h2>
       <form action="" onSubmit={createNote}>
         <label htmlFor="title">Title</label>
         <br />
